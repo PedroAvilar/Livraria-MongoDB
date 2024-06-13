@@ -1,0 +1,33 @@
+<main class="container-fluid">
+    <!--Título da página.-->
+    <h1 class="my-3">
+        Dados do livro
+    </h1>
+    <!--Formulário.-->
+    <form (submit)="incluir()" ngNativeValidate>
+        <!--Área de título.-->
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" id="titulo" name="titulo" [(ngModel)]="livro.titulo" class="form-control" required>
+        </div>
+        <!--Área de resumo.-->
+        <div class="mb-3">
+            <label for="resumo" class="form-label">Resumo</label>
+            <textarea id="resumo" name="resumo" [(ngModel)]="livro.resumo" class="form-control" ></textarea>
+        </div>
+        <!--Área de editora.-->
+        <div class="mb-3">
+            <label for="editora" class="form-label">Editora</label>
+            <select id="editora" name="editora" [(ngModel)]="livro.codEditora" class="form-select" required>
+                <option *ngFor="let editora of editoras" [value]="editora.codEditora">{{editora.nome}}</option>
+            </select>
+        </div>
+        <!--Área de autores.-->
+        <div class="mb-3">
+            <label for="autores" class="form-label">Autores (1 por linha)</label>
+            <textarea id="autores" name="autores" [(ngModel)]="autoresForm" class="form-control"></textarea>
+        </div>
+        <!--Botão para submissão.-->
+        <button type="submit" class="btn btn-primary mb-3">Salvar dados</button>
+    </form>
+</main>

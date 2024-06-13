@@ -1,0 +1,41 @@
+<main class="container-fluid">
+    <!--Título da página.-->
+    <h1 class="my-3">
+        Catálogo de livros
+    </h1>
+    <!--Tabela para exibição dos livros.-->
+    <table class="table table-striped">
+        <!--Cabeçalho da tabela.-->
+        <thead>
+            <!--Linha do cabeçalho.-->
+            <tr>
+                <!--Células do cabeçalho.-->
+                <th class="bg-dark text-white col-2 p-2">Título</th>
+                <th class="bg-dark text-white col-6 p-2">Resumo</th>
+                <th class="bg-dark text-white col-2 p-2">Editora</th>
+                <th class="bg-dark text-white col-2 p-2">Autores</th>
+            </tr>
+        </thead>
+        <!--Corpo da tabela.-->
+        <tbody>
+            <!--Linha com laço para exibir cada livro do vetor livros.-->
+            <tr *ngFor="let livro of livros">
+                <!--Célula com título e botão para excluir o livro.-->
+                <td class="d-flex flex-column">
+                    {{livro.titulo}}
+                    <button (click)="excluir(livro.codigo)" class="btn btn-danger mt-2">Excluir</button>
+                </td>
+                <!--Célula de resumo-->
+                <td>{{livro.resumo}}</td>
+                <!--Célula que invoca função obterNome.-->
+                <td>{{obterNome(livro.codEditora)}}</td>
+                <!--Célula para autores em forma de lista.-->
+                <td>
+                    <ul>
+                        <li *ngFor="let autor of livro.autores">{{autor}}</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>

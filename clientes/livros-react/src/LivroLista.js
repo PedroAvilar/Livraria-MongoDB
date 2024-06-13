@@ -24,24 +24,29 @@ function LinhaLivro (props) {
         </tr>
     )
 }
+
 //Componente para exibir o catálogo de livros em uma tabela.
 function LivroLista () {
     const [livros, setLivros] = useState ([]);
     const [carregado, setCarregado] = useState (false);
     useEffect (() => {
-        const obterLivros = async() => {
-            const livros = await controleLivro.obterLivros ();
-            setLivros(livros);
-            setCarregado(true);
+        if (!carregado){
+            controleLivro.obterLivros()
+            .then((livros) => {
+                setLivros(livros);
+                setCarregado(true);
+            })
         }
-        if (!carregado) {obterLivros();}
     }, [carregado]);
 
     //Método para excluir o livro chamado pelo botão.
     const excluir = (codigo) => {
-         controleLivro.excluir (codigo);
-        setCarregado (false);
-    }
+        controleLivro.excluir(codigo)
+        .then(() => {
+            setCarregado (false);
+        })
+    };
+
     //Retorna o nome da tabela, seu cabeçalho e os livros com botão de exclusão.
     return (
         <div className="container">
@@ -49,14 +54,16 @@ function LivroLista () {
                 <h1 className="my-3">Catálogo de livros</h1>
                 <table className="table table-striped">
                     <thead className="bg-dark text-light">
-                        <td className="col-2 text-left p-2">Título</td>
-                        <td className="col-6 text-left p-2">Resumo</td>
-                        <td className="col-2 text-left p-2">Editora</td>
-                        <td className="col-2 text-left p-2">Autores</td>
+                        <tr>
+                            <th className="col-2 text-left p-2">Título</th>
+                            <th className="col-6 text-left p-2">Resumo</th>
+                            <th className="col-2 text-left p-2">Editora</th>
+                            <th className="col-2 text-left p-2">Autores</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        {livros.map(livro => (
-                            <LinhaLivro key = {livro.codigo} livro = {livro} excluir = {excluir}/>
+                        {livros.map((livro, index) => (
+                            <LinhaLivro key = {index} livro = {livro} excluir = {excluir}/>
                         ))}
                     </tbody>
                 </table>

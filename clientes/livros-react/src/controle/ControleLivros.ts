@@ -5,11 +5,11 @@ const baseURL = "http://localhost:3030/livros";
 
 //Compatibiliza o tipo de Livro às chamadas para o sevidor.
 interface LivroMongo {
-    _id: string | null;
+    _id: String | null;
     codEditora: number;
-    titulo: string;
-    resumo: string;
-    autores: string[];
+    titulo: String;
+    resumo: String;
+    autores: String[];
 }
 
 //Classe com métodos para retornar os livros, incluir ou excluir.
@@ -18,17 +18,17 @@ class ControleLivro {
         try {
             const resposta = await fetch(baseURL, {method: "GET"});
             const respostaJSON = await resposta.json();
-            return respostaJSON.map((livro: any) => {
-                new Livro(
-                    livro._id,
-                    livro.codEdditora,
-                    livro.titulo,
-                    livro.resumo,
-                    livro.autores
-                )
-            })
+            const livros = respostaJSON.map((livro: any) => new Livro(
+                livro._id,
+                livro.codEditora,
+                livro.titulo,
+                livro.resumo,
+                livro.autores
+            ));
+            return livros;
         } catch (error) {
             console.log(error);
+            return [];
         }
     }
     incluir = async (livro: Livro) => {
@@ -43,7 +43,7 @@ class ControleLivro {
             const resposta = await fetch(baseURL, {
                 method: "POST",
                 headers: {
-                    "Contenty-Type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(livroMongo)
             });

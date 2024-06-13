@@ -1,8 +1,8 @@
-//Importação de livro-dao.
+//Importações e referências.
+const banco = require("../modelo/conexao");
 const {obterLivros, incluir, excluir} = require("../modelo/livro-dao")
-
-//Referência a biblioteca express.
 const express = require("express");
+const Livro = require('../modelo/livro-schema');
 
 //Objeto Router.
 const router = express.Router();
@@ -21,7 +21,15 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const livro = req.body;
-        await incluir(livro);
+        //Variável auxiliar para substituir o _id string recebido do front para um ObjectId aceito pelo MongoDB.
+        const novoLivro = new Livro({
+            _id: new banco.Types.ObjectId,
+            codEditora: livro.codEditora,
+            titulo: livro.titulo,
+            resumo: livro.resumo,
+            autores: livro.autores
+          });
+        await incluir(novoLivro);
         res.json({message: "Livro incluído com sucesso."})
     } catch (error) {
         res.status(500).json({message: "Erro ao incluir o livro.", error})

@@ -31,15 +31,16 @@ function LivroDados () {
         evento.preventDefault();
         const autoresArray = autores.split('\n');
         const novoLivro = {
-            codigo: 0,
+            codigo: "",
             titulo: titulo,
             resumo: resumo,
             autores: autoresArray,
             codEditora: codEditora
         };
-        controleLivro.incluir(novoLivro);
-        navigate('/');
-    }
+        controleLivro.incluir(novoLivro).then(() => {
+            navigate("/");
+        });
+    };
     //Retorna o formulário em HTML.
     return (
         <main className="container">

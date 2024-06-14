@@ -1,28 +1,65 @@
 import Livro from "../modelo/Livro";
 
-//Dados JSON para o livros.
-const livros: Array <Livro> = [
-    {codigo: 1478, codEditora: 789, titulo: "JavaScript", 
-    resumo: "Conheça a história da linguagem e sua sintaxe com exemplos.", autores: ["Will", "Pedro"]},
-    {codigo: 2556, codEditora:456, titulo: "CSS", 
-    resumo: "Exercícios práticos para se tornar um expert na formatação de sites.", autores: ["Wilson", "Aráujo"]},
-    {codigo: 9323, codEditora: 123, titulo: "HTML", 
-    resumo: "Explore sua evolução e conheça todas as tags disponíveis.", autores: ["Pedro", "Avilar"]}
-];
-//Classe com métodos para retornar o vetor de livros, incluir ou excluir.
+//Endereço de base do servidor express.
+const baseURL = "http://localhost:3030/livros";
+
+//Compatibiliza o tipo de Livro às chamadas para o sevidor.
+interface LivroMongo {
+    _id: String | null;
+    codEditora: number;
+    titulo: String;
+    resumo: String;
+    autores: String[];
+}
+
+//Classe com métodos para retornar os livros, incluir ou excluir.
 class ControleLivro {
-    obterLivros () {
-        return livros;
+    obterLivros = async () => {
+        try {
+            const resposta = await fetch(baseURL, {method: "GET"});
+            const respostaJSON = await resposta.json();
+            const livros = respostaJSON.map((livro: any) => new Livro(
+                livro._id,
+                livro.codEditora,
+                livro.titulo,
+                livro.resumo,
+                livro.autores
+            ));
+            return livros;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
-    incluir (novoLivro: Livro): void {
-        const maiorCodigo = livros.reduce((maior, livro) => (livro.codigo > maior ? livro.codigo : maior), 0);
-        novoLivro.codigo = maiorCodigo + 1;
-        livros.push (novoLivro);
+    incluir = async (livro: Livro) => {
+        const livroMongo: LivroMongo = {
+            _id: livro.codigo,
+            codEditora: livro.codEditora,
+            titulo: livro.titulo,
+            resumo: livro.resumo,
+            autores: livro.autores
+        };
+        try {
+            const resposta = await fetch(baseURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(livroMongo)
+            });
+            return resposta.ok;
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
     }
-    excluir (codigo: number): void {
-        const indice = livros.findIndex (livro => livro.codigo === codigo);
-        if (indice !== -1) {
-            livros.splice(indice, 1);
+    excluir = async (codigo: string) => {
+        try {
+            const resposta = await fetch(`${baseURL}/${codigo}`, {method: "DELETE"});
+            return resposta.ok
+        } catch (error) {
+            console.log(error);
+            return false;
         }
     }
 }

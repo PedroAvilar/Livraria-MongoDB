@@ -53,12 +53,12 @@ function LivroLista () {
             <main>
                 <h1 className="my-3">Catálogo de livros</h1>
                 <table className="table table-striped">
-                    <thead className="bg-dark text-light">
+                    <thead>
                         <tr>
-                            <th className="col-2 text-left p-2">Título</th>
-                            <th className="col-6 text-left p-2">Resumo</th>
-                            <th className="col-2 text-left p-2">Editora</th>
-                            <th className="col-2 text-left p-2">Autores</th>
+                            <th className="bg-dark text-white col-2 text-left p-2">Título</th>
+                            <th className="bg-dark text-white col-6 text-left p-2">Resumo</th>
+                            <th className="bg-dark text-white col-2 text-left p-2">Editora</th>
+                            <th className="bg-dark text-white col-2 text-left p-2">Autores</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -24,7 +24,7 @@ export class LivroDadosComponent {
     private servLivros: ControleLivrosService,
     private router: Router
   ) {
-    this.livro = new Livro(0, 0, "", "", []);
+    this.livro = new Livro("", 0, "", "", []);
   }
   //Método que preenche o vetor de editoras.
   ngOnInit(): void {
@@ -34,7 +34,9 @@ export class LivroDadosComponent {
   invoca incluir de controle-livros.service.*/
   incluir = (): void => {
     this.livro.autores = this.autoresForm.split("\n").filter(author => author.trim() !== '');
-    this.servLivros.incluir(this.livro);
-    this.router.navigateByUrl("/lista");
+    this.servLivros.incluir(this.livro)
+    .then(() => {
+      this.router.navigateByUrl("/lista");
+    })
   }
 }

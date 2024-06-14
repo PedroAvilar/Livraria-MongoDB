@@ -6,8 +6,9 @@ import Livro from "@/classes/modelo/Livro";
 import Head from "next/head";
 import { Menu } from "@/componentes/Menu";
 import { LinhaLivro } from "@/componentes/LinhaLivro";
+import ControleLivro from "@/classes/controle/ControleLivros";
 
-const baseURL = "http://localhost:3000/api/livros";
+const controleLivro =  new ControleLivro();
 
 const LivroLista: NextPage = () => {
     const [livros, setLivros] = useState<Array<Livro>>([]);
@@ -15,16 +16,20 @@ const LivroLista: NextPage = () => {
 
     useEffect(() => {
         if (!carregado) {
-            obterLivros().then(dados => {
+            controleLivro.obterLivros()
+            .then(dados => {
                 setLivros(dados);
                 setCarregado(true);
             });
         }
     }, [carregado]);
 
-    const excluir = (codigo: number) => {
-		excluirLivro(codigo).then(() => setCarregado(false))
-	}
+    const excluir = (codigo: string) => {
+		controleLivro.excluir(codigo)
+        .then(() => {
+            setCarregado (false);
+        })
+    };
 
     return (
         <div className={styles.container}>
@@ -46,23 +51,14 @@ const LivroLista: NextPage = () => {
                         </tr>
                         </thead>
                     <tbody>
-                        {livros.map(livro => (
-                            <LinhaLivro key={livro.codigo} livro={livro} excluir={() => excluir(livro.codigo)} />
+                        {livros.map((livro, index) => (
+                            <LinhaLivro key={index} livro={livro} excluir={() => excluir(livro.codigo)} />
                         ))}
                     </tbody>
                 </table>
             </main>
         </div>
     )
-}
-const obterLivros = async () => {
-    const response = await fetch(baseURL);
-    const dados = await response.json();
-    return (dados)
-}
-const excluirLivro = async (codigo: number) => {
-    const response = await fetch (`${baseURL}/${codigo}`, {method: "DELETE"});
-    return response.ok
 }
 
 export default LivroLista;

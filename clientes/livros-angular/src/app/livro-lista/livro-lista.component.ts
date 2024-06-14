@@ -23,12 +23,17 @@ export class LivroListaComponent {
   //Método que preenche os vetores editoras e livros.
   ngOnInit(): void {
     this.editoras = this.servEditora.getEditoras();
-    this.livros = this.servLivros.obterLivros();
+    this.servLivros.obterLivros()
+    .then(dados => {
+      this.livros = dados;
+    })
   }
   //Método excluir que chama servLivros.
-  excluir = (codigo: number): void => {
-    this.servLivros.excluir(codigo);
-    this.livros = this.servLivros.obterLivros();
+  excluir = (codigo: string): void => {
+    this.servLivros.excluir(codigo)
+    .then(() => {
+      this.servLivros.obterLivros();
+    });
   }
   //Método obterNome que chama servEditora.
   obterNome = (codEditora: number): string => {

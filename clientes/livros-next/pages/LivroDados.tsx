@@ -7,20 +7,10 @@ import { Router, useRouter } from "next/router";
 import { Menu } from "@/componentes/Menu";
 import Head from "next/head";
 import 'bootstrap/dist/css/bootstrap.css';
+import ControleLivro from "@/classes/controle/ControleLivros";
 
 const controleEditora = new ControleEditora();
-
-const baseURL = "http://localhost:3000/api/livros";
-
-const incluirLivro = async (livro: Livro) => {
-    const response = await fetch(baseURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }, body: JSON.stringify(livro)
-    });
-    return response.ok
-}
+const controleLivro =  new ControleLivro();
 
 const LivroDados: NextPage = () => {
     const opcoes = controleEditora.getEditoras().map((editora => ({
@@ -39,13 +29,16 @@ const LivroDados: NextPage = () => {
     const incluir = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const livro: Livro = {
-            codigo: 0,
+            codigo: "",
             titulo: titulo,
             resumo: resumo,
             autores: autores.split("\n"),
             codEditora: codEditora
         }
-        incluirLivro(livro).then(() => router.push('/LivroLista'))
+        controleLivro.incluir(livro)
+        .then(() => {
+            router.push('/LivroLista');
+        })
     }
     return (
         <div className={styles.container}>

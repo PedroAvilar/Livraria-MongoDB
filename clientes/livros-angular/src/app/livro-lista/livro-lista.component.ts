@@ -32,8 +32,11 @@ export class LivroListaComponent {
   excluir = (codigo: string): void => {
     this.servLivros.excluir(codigo)
     .then(() => {
-      this.servLivros.obterLivros();
-    });
+      return this.servLivros.obterLivros();
+    })
+    .then(dados => {
+      this.livros = dados;
+    })
   }
   //Método obterNome que chama servEditora.
   obterNome = (codEditora: number): string => {
